@@ -1,25 +1,23 @@
-require('dotenv').config();
-const express = require('express');
+import express from "express";
+import mongoose from "mongoose";
+import * as dotenv from "dotenv";
+
+const PORT = 3000;
 const app = express();
-const studentRouter = require('./routes/students');
-const PORT = 3500;
-const mongoose = require('mongoose');
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-
-mongoose.connect(process.env.DB_URL);
-
+dotenv.config();
+mongoose.connect(process.env.MONGO_URI);
 const db = mongoose.connection;
-db.on('error', errorMessage => console.log(errorMessage));
-db.once('open', () => console.log('Connection Established'));
+db.on("error", (errorMessage) => console.log(errorMessage));
+db.once("open", () => console.log("Connection established"));
 
-app.use(express.json()); 
-
-app.get('/', (req, res) => {
-  res.send('Hello World');
+app.use("/api/v1/movie", movie);
+app.get("/", (req, res) => {
+  res.send("working");
 });
 
-app.use('/api/v1/students', studentRouter);
-
 app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}/`);
+  console.log(`workign in http://localhost:${PORT}`);
 });
